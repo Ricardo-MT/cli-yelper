@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        // Enables type checking for JavaScript files.
+        "checkJs": true,
+        // Allows JavaScript files to be included in the program.
+        "allowJs": true,
+        // Specifies the module code generation method. Set to 'esnext' or 'es2020' to match 'type: module' in package.json.
+        "module": "es2020",
+        // Specifies how modules are resolved. 'node' simulates Node.js module resolution.
+        "moduleResolution": "node",
+        // Specifies the ECMAScript target version for generated JavaScript code.
+        "target": "es2020",
+        // Do not emit compiler output (e.g., .js files from .ts files), just type check.
+        "noEmit": true,
+        // Enable all strict type-checking options.
+        "strict": true,
+        // Enables a full range of semantic checks for JavaScript files.
+        // This is often implicitly enabled by 'checkJs' but good to be explicit.
+        "maxNodeModuleJsDepth": 1,
+        // Enables compatibility with CommonJS modules when importing them as ES Modules.
+        "esModuleInterop": true,
+        // Disallow inconsistently-cased references to the same file.
+        "forceConsistentCasingInFileNames": true
+    },
+    // Specifies the files to include in the program.
+    // "./**/*" includes all files in the current directory and its subdirectories.
+    "include": ["./**/*"],
+    // Specifies the files to exclude from the program.
+    // Typically, node_modules should be excluded to improve performance.
+    "exclude": ["node_modules"]
+}
