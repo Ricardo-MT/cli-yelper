@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
+// @ts-nocheck
 // Import necessary modules using ES Module syntax
-import { exec } from 'child_process'; // For executing shell commands
-import fs from 'fs'; // For reading the commands.json file
-import path from 'path'; // For resolving file paths
-import { fileURLToPath } from 'url'; // For resolving __dirname equivalent in ES Modules
-import {promptChoices, promptResponse} from './prompter.mjs';
-import chalk from 'chalk'; // For adding color to console output
-import ora from 'ora'; // For displaying a loading spinner
+import { exec } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { promptChoices, promptResponse } from "./prompter.js";
+import chalk from 'chalk';
+import ora from 'ora';
 
 // Resolve __dirname equivalent for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -18,24 +19,29 @@ const COMMANDS_FILE = path.join(__dirname, 'commands.json');
 
 /**
  * Loads commands from the commands.json file.
- * @returns {Array<Object>} An array of command objects, or an empty array if an error occurs.
+ * @returns {Array<{name: string;command: string;}>} An array of command objects, or an empty array if an error occurs.
  */
 function loadCommands() {
   try {
-    // Read the file synchronously and parse it as JSON
-    const data = fs.readFileSync(COMMANDS_FILE, 'utf8');
-    return JSON.parse(data);
+      const exists = fs.existsSync(COMMANDS_FILE);
+      if (exists) {
+          // Read the file synchronously and parse it as JSON
+          const data = fs.readFileSync(COMMANDS_FILE, 'utf8');
+          return JSON.parse(data);
+      }
+      fs.writeFileSync(COMMANDS_FILE, JSON.stringify([]), 'utf8');
+      return [];
   } catch (error) {
     // Log an error if the file cannot be read or parsed
     // @ts-ignore
     console.error(chalk.red(`Error loading commands from ${COMMANDS_FILE}: ${error.message}`));
-    return []; // Return an empty array to prevent further errors
+    throw error;
   }
 }
 
 /**
  * Save commands to the commands.json file.
- * @param {Array<Object>} commands An array of command objects.
+ * @param {Array<{name: string;command: string;}>} commands An array of command objects.
  */
 function saveCommands(commands) {
   try {
@@ -199,7 +205,7 @@ async function showCommandList() {
       console.log(chalk.blue("Operation canceled by the user.\n"));
     }
     else {
-      const newCommands = commands.filter(({name}, i) => name !== commandToDelete.name);
+      const newCommands = commands.filter(({name}) => name !== commandToDelete.name);
       saveCommands(newCommands);
     }
     return showCommandList();

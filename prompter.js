@@ -1,11 +1,12 @@
+// @ts-nocheck
 import {
     createPrompt,
-    useState,
-    useKeypress,
-    usePrefix,
+    isDownKey,
     isEnterKey,
     isUpKey,
-    isDownKey,
+    useKeypress,
+    usePrefix,
+    useState,
 } from '@inquirer/core';
 import { input } from '@inquirer/prompts';
 import chalk from 'chalk';
@@ -24,7 +25,7 @@ export const promptChoices =  async (options) => {
         output: process.stdout,
     });
 
-    rl.output.write('\x1B[?25l'); // Hide cursor
+    rl.write('\x1B[?25l'); // Hide cursor
 
     const answer = await createPrompt((config, done) => {
         const { choices } = config;
@@ -88,7 +89,7 @@ export const promptChoices =  async (options) => {
         return [`${prefix} ${message}`, renderedChoices];
     })(options);
 
-    rl.output.write('\x1B[?25h'); // Show cursor
+    rl.write('\x1B[?25h'); // Show cursor
 
     rl.close();
 
@@ -101,3 +102,18 @@ export const promptResponse = async (question) => {
     });
     return answer;
 }
+
+// type Options = {
+//     type: string;
+//     name: string;
+//     message: string;
+//     choices: Array<Choice>;
+//     renderSelected?: (choice : Choice, index?: number) => string;
+//     renderUnselected?: (choice : Choice,  index?: number) => string;
+// }
+
+// type Choice = {
+//     name: string;
+//     value: string;
+//     key?: string;
+// } 
