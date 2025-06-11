@@ -216,4 +216,24 @@ async function showCommandList() {
     return showCommandList();
 }
 
+// Function to get the package version from package.json
+function getPackageVersion() {
+  try {
+    const packageJsonPath = path.resolve(__dirname, 'package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    return packageJson.version;
+  } catch (error) {
+    console.error('Error reading package.json:', error.message);
+    return 'unknown'; // Fallback if package.json can't be read
+  }
+}
+
+const args = process.argv.slice(2);
+
+if (args.includes('-v') || args.includes('--version')) {
+  const version = getPackageVersion();
+  console.log(version);
+  process.exit(0); // Exit successfully after displaying version
+}
+
 showCommandList();

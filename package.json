@@ -1,6 +1,6 @@
 {
     "name": "cli-yelper",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "description": "A CLI tool to manage quick access terminal commands.",
     "main": "index.js",
     "type": "module",
