@@ -9,13 +9,12 @@ import { fileURLToPath } from 'url';
 import { promptChoices, promptResponse } from "./prompter.js";
 import chalk from 'chalk';
 import ora from 'ora';
+import { getPackageJson, getUserDataPath } from './utils.js';
 
-// Resolve __dirname equivalent for ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const DATA_DIR = getUserDataPath();
 
 // Define the path to the commands JSON file
-const COMMANDS_FILE = path.join(__dirname, 'commands.json');
+const COMMANDS_FILE = path.join(DATA_DIR, 'commands.json');
 
 /**
  * Loads commands from the commands.json file.
@@ -64,7 +63,7 @@ function listCommands() {
     commands.forEach(({name, command}, i) => {
       console.log(chalk.bgGreen(`${i}. ${name} -> ${command}`))
     });    
-    console.log(chalk.blue('----------------------\n'));
+    console.log(chalk.blue('----------------------'));
   } catch (error) {
     // Log an error if the file cannot be read or parsed
     // @ts-ignore
@@ -147,9 +146,8 @@ async function showCommandList() {
   }
   crudChoices.push({ name: chalk.blue('Exit'), value: 'exit', key: "escape" });
 
-  if (!hasAvailableCommands){
-    console.log("You don't have any saved commands. Start by adding a command.")
-  }
+  console.log(hasAvailableCommands? "" : "You don't have any saved commands. Start by adding a command.");
+
   // Prompt the user to select a command
   const selectedCommand = await promptChoices({
     type: 'list',
@@ -216,15 +214,12 @@ async function showCommandList() {
     return showCommandList();
 }
 
-// Function to get the package version from package.json
 function getPackageVersion() {
   try {
-    const packageJsonPath = path.resolve(__dirname, 'package.json');
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    return packageJson.version;
+    return getPackageJson().version;
   } catch (error) {
-    console.error('Error reading package.json:', error.message);
-    return 'unknown'; // Fallback if package.json can't be read
+    console.error('Error reading version:', error.message);
+    return 'unknown';
   }
 }
 
@@ -236,4 +231,18 @@ if (args.includes('-v') || args.includes('--version')) {
   process.exit(0); // Exit successfully after displaying version
 }
 
-showCommandList();
+const start = () => {
+  console.log("");
+  console.log("-------------------------------------------------------------");
+  console.log("------------------- WELCOME TO CLI-YELPER -------------------");
+  console.log("-------------------------------------------------------------");
+  console.log("Your commands are being saved in " + COMMANDS_FILE);
+  console.log("-------------------------------------------------------------");
+  console.log("");
+  
+  showCommandList();
+}
+
+fs.promises.mkdir(DATA_DIR, { recursive: true }).then(start).catch(e => {
+  console.error(e);
+})
