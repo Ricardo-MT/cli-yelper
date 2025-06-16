@@ -1,10 +1,20 @@
 {
     "name": "cli-yelper",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "A CLI tool to manage quick access terminal commands.",
     "main": "index.js",
     "type": "module",
     "bin": "./index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Ricardo-MT/cli-yelper"
+    },
+    "homepage": "https://github.com/Ricardo-MT/cli-yelper#readme",
+    "bugs": {
+        "url": "https://github.com/Ricardo-MT/cli-yelper/issues",
+        "email": "rikr2.mt@gmail.com"
+    },
+    "author": "Ricardo Mejias <rikr2.mt@gmail.com> (https://ricardomejiastravieso.com/)",
     "scripts": {
         "start": "node index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +27,6 @@
         "automation",
         "terminal"
     ],
-    "author": "Ricardo Mejias",
     "license": "ISC",
     "dependencies": {
         "@inquirer/core": "^1.0.1",
